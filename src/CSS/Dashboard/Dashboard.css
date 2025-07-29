@@ -1,0 +1,5 @@
+/* styles.css */
+/* Optional: Smooth transitions */
+a {
+  transition: all 0.2s ease-in-out;
+}
