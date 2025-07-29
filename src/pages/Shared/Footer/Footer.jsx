@@ -47,7 +47,7 @@ const Footer = () => {
       </div>
 
       <div className="mt-10 border-t border-red-500 pt-4 text-center text-sm text-white">
-        © {new Date().getFullYear()} Blood Bank. All rights reserved.
+        © {new Date().getFullYear()} LifeStream. All rights reserved.
       </div>
     </footer>
   );
