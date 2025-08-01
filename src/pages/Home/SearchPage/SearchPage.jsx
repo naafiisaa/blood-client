@@ -1,11 +1,11 @@
+
 import { useState } from "react";
 import { FaSearch, FaTint, FaMapMarkerAlt, FaUser } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 import distictsData from '../../../assets/districts.json';
 import upazilasData from '../../../assets/upazilas.json';
-
-import useAxiosPublic from "../../../hooks/useAxiosPublic";
+import useAxiosPublic from "../../../Hooks/useAxiosPublic";
 
 const SearchPage = () => {
   const axiosPublic = useAxiosPublic();
@@ -16,30 +16,31 @@ const SearchPage = () => {
   const [donors, setDonors] = useState([]);
   const [showResults, setShowResults] = useState(false);
 
-  const handleSearch = async () => {
-    try {
-      // Fetch all donors (you can optimize with query params if backend supports)
-      const res = await axiosPublic.get("/users");
-      const donorList = res.data.users || [];
+ const handleSearch = async () => {
+  try {
+    const res = await axiosPublic.get("/users");
+    const donorList = res.data.users || res.data || [];
 
-      // Filter on client side based on selections
-      const filtered = donorList.filter((donor) => {
-        return (
-          (bloodGroup ? donor.bloodGroup === bloodGroup : true) &&
-          (district ? donor.district === district : true) &&
-          (upazila ? donor.upazila === upazila : true)
-        );
-      });
+    // Get selected district name from ID
+    const selectedDistrictName = distictsData.find(d => d.id === district)?.name;
 
-      setDonors(filtered);
-      setShowResults(true);
-    } catch (error) {
-      console.error("Search failed:", error);
-    }
-  };
+    const filtered = donorList.filter((donor) => {
+      if (bloodGroup && donor.bloodGroup !== bloodGroup) return false;
+      if (district && donor.district !== selectedDistrictName) return false;
+      if (upazila && donor.upazila !== upazila) return false;
+      return true;
+    });
+
+    setDonors(filtered);
+    setShowResults(true);
+  } catch (error) {
+    console.error("Search failed:", error);
+  }
+};
+
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="max-w-6xl mt-20 mx-auto px-4 py-8">
       <motion.h2
         className="text-3xl font-bold text-center mb-8"
         initial={{ opacity: 0, y: -20 }}
@@ -51,7 +52,7 @@ const SearchPage = () => {
 
       {/* Search Form */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        {/* Blood Group Selector */}
+        {/* Blood Group */}
         <select
           value={bloodGroup}
           onChange={(e) => setBloodGroup(e.target.value)}
@@ -63,12 +64,12 @@ const SearchPage = () => {
           ))}
         </select>
 
-        {/* District Selector */}
+        {/* District */}
         <select
           value={district}
           onChange={(e) => {
             setDistrict(e.target.value);
-            setUpazila(""); // Reset upazila when district changes
+            setUpazila("");
           }}
           className="select select-bordered w-full"
         >
@@ -78,18 +79,18 @@ const SearchPage = () => {
           ))}
         </select>
 
-        {/* Upazila Selector */}
+        {/* Upazila */}
         <select
           value={upazila}
           onChange={(e) => setUpazila(e.target.value)}
           className="select select-bordered w-full"
-          disabled={!district} // Disable upazila if no district selected
+          disabled={!district}
         >
           <option value="">Select Upazila</option>
           {upazilasData
             .filter((u) => u.district_id === district)
             .map((u) => (
-              <option key={u.id} value={u.id}>{u.name}</option>
+              <option key={u.id} value={u.name}>{u.name}</option>
             ))}
         </select>
 
@@ -138,7 +139,7 @@ const SearchPage = () => {
                     <FaMapMarkerAlt className="text-blue-600" /> <strong>District:</strong> {distictsData.find(d => d.id === donor.district)?.name || donor.district}
                   </p>
                   <p className="flex items-center gap-2">
-                    <FaMapMarkerAlt className="text-blue-400" /> <strong>Upazila:</strong> {upazilasData.find(u => u.id === donor.upazila)?.name || donor.upazila}
+                    <FaMapMarkerAlt className="text-blue-400" /> <strong>Upazila:</strong> {donor.upazila}
                   </p>
                   <p className="mt-2"><strong>Email:</strong> {donor.email}</p>
                 </motion.div>

@@ -3,6 +3,7 @@ import UserHome from '../UserHome/UserHome';
 import AdminHome from '../AdminHome/AdminHome';
 import useAuth from '../../../Hooks/useAuth'; // Assuming you have this hook for fetching the logged-in user
 import axios from 'axios';
+import Loading from '../../../Components/Loading/Loading';
 
 const DashboardHome = () => {
   const { user } = useAuth(); // Logged-in user from AuthProvider
@@ -15,7 +16,7 @@ const DashboardHome = () => {
         const token = localStorage.getItem('access_token'); // Retrieve the token from local storage
         const email = user?.email; // Use the logged-in user's email
         if (email) {
-          const response = await axios.get(`http://localhost:8001/users/${email}`, {
+          const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/${email}`, {
             headers: {
               Authorization: `Bearer ${token}`, // Include the token in the request headers
             },
@@ -33,7 +34,7 @@ const DashboardHome = () => {
   }, [user]);
 
   if (isLoading) {
-    return <div>Loading...</div>; // Show a loading message while fetching data
+    return <Loading />// Show a loading message while fetching data
   }
 
   return (

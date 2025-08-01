@@ -6,6 +6,7 @@ import { FaUsers } from 'react-icons/fa';
 import { FaBook } from 'react-icons/fa6';
 import { motion } from 'framer-motion';
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
+import Loading from '../../../Components/Loading/Loading';
 
 const AdminHome = () => {
   const { user } = useAuth();
@@ -21,7 +22,7 @@ const AdminHome = () => {
     queryFn: fetchAdminState,
   });
 
-  if (isLoading) return <div className="text-center text-lg font-semibold mt-10">Loading...</div>;
+  if (isLoading) return <Loading></Loading>
   if (error) return <div className="text-center text-red-500 mt-10">Error fetching admin state</div>;
 
   return (

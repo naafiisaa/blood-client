@@ -11,7 +11,7 @@ const Footer = () => {
           <img
             className="w-16 mb-2"
             src="https://i.ibb.co.com/0y3TKf4/images-q-tbn-ANd9-Gc-QTFUPJ215o-Q9m-Bln91-MMv65-J4-IRMUi-JZXi-Dw-s.png"
-            alt="Blood Bank"
+            alt="Life Stream"
           />
           <p className="text-sm">
             Saving lives one drop at a time. Join us in making a difference.
@@ -39,9 +39,16 @@ const Footer = () => {
         <div>
           <h4 className="font-bold mb-2 text-white">Follow Us</h4>
           <div className="flex gap-4 text-xl">
-            <a href="#" className="hover:text-gray-200"><FaFacebook /></a>
-            <a href="#" className="hover:text-gray-200"><FaTwitter /></a>
-            <a href="#" className="hover:text-gray-200"><FaInstagram /></a>
+           <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-200">
+  <FaFacebook />
+</a>
+<a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-200">
+  <FaTwitter />
+</a>
+<a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-200">
+  <FaInstagram />
+</a>
+
           </div>
         </div>
       </div>

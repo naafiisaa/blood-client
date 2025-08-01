@@ -8,7 +8,7 @@
 //   const navigate = useNavigate();
 
 //   const axiosSecure = axios.create({
-//     baseURL: 'http://localhost:8001/',  // Update to your API's base URL
+//     baseURL: 'https://lifestream-server.vercel.app/',  // Update to your API's base URL
 //   });
 
 //   useEffect(() => {
@@ -51,7 +51,7 @@ import useAuth from './useAuth';
 
 // Create axios instance once outside the hook
 const axiosSecure = axios.create({
-  baseURL: 'http://localhost:8001/',
+ baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 const useAxiosSecure = () => {
@@ -78,9 +78,11 @@ const useAxiosSecure = () => {
         (response) => response,
         async (error) => {
           if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+          
             localStorage.removeItem('access_token');
-            await logOut();
-            alert('Session expired or unauthorized access. Please log in again.');
+navigate('/login', { replace: true });
+
+            // alert('Session expired or unauthorized access. Please log in again.');
             navigate('/login', { replace: true });
           }
           return Promise.reject(error);

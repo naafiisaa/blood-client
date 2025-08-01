@@ -9,7 +9,9 @@ const Main = () => {
                   <div className='w-full'>
                         <Navbar></Navbar>
                   </div>
-                  <div className='min-h-screen mt-20'>
+
+
+                  <div className='min-h-screen '>
                         <Outlet></Outlet>
                   </div>
                   <Footer></Footer>

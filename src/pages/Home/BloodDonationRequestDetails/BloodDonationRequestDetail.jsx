@@ -1,98 +1,155 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
+import { useParams } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
-import useAxiosPublic from '../../../hooks/useAxiosPublic';
-import useAuth from '../../../Hooks/useAuth';
+import { motion } from 'framer-motion';
+import {
+  FaMapMarkerAlt,
+  FaHospital,
+  FaTint,
+  FaClock,
+  FaUser,
+  FaEnvelope,
+  FaCalendarAlt,
+  FaCommentDots,
+  FaRegCheckCircle,
+} from 'react-icons/fa';
+import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import { AuthContext } from '../../../Providers/AuthProvider';
+import Loading from '../../../Components/Loading/Loading';
 
 const BloodDonationRequestDetail = () => {
-  const axiosPublic = useAxiosPublic();
-  const { user } = useAuth();
-  const [donationRequests, setDonationRequests] = useState([]);
+  const { id } = useParams();
+  const axiosSecure = useAxiosSecure();
+  const { user } = useContext(AuthContext);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchDonationRequests = async () => {
-      try {
-        const response = await axiosPublic.get('/donation-requests', {
-          params: { status: 'pending' },
-        });
-        setDonationRequests(response.data.donationRequests);
-      } catch (error) {
-        console.error('Error fetching donation requests:', error);
+  const { data: request, isLoading } = useQuery({
+    queryKey: ['donationRequest', id],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/donation-requests/${id}`);
+      return res.data;
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      return await axiosSecure.patch(`/donation-requests/${id}/status`, {
+        status: 'inprogress',
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['donationRequest']);
+      Swal.fire('Confirmed!', 'You have confirmed the donation.', 'success');
+    },
+  });
+
+  const handleConfirmDonate = () => {
+    Swal.fire({
+      title: 'Confirm Donation?',
+      html: `
+        <p><strong>Donor Name:</strong> ${user?.displayName}</p>
+        <p><strong>Donor Email:</strong> ${user?.email}</p>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Confirm',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        mutation.mutate();
       }
-    };
-
-    fetchDonationRequests();
-  }, [axiosPublic]);
-
-  const handleConfirmDonation = async (id) => {
-    try {
-      await axiosPublic.patch(`/donation-requests/${id}`, { status: 'inprogress' });
-      setDonationRequests((prevRequests) =>
-        prevRequests.map((request) =>
-          request._id === id ? { ...request, status: 'inprogress' } : request
-        )
-      );
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Donation confirmed successfully!',
-      });
-    } catch (error) {
-      console.error('Error confirming donation:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Failed to confirm donation.',
-      });
-    }
+    });
   };
 
+  if (isLoading)
+    return <Loading />
+  if (!request)
+    return <p className="text-center py-20 text-red-600 font-semibold">Request not found.</p>;
+
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Blood Donation Details</h2>
-      <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4">
-        {donationRequests.length > 0 ? (
-          donationRequests.map((request) => (
-            <div key={request._id} className="border p-4 rounded shadow">
-              <h3 className="font-bold text-lg">{request.recipientName}</h3>
-              <p>Location: {request.recipientDistrict}, {request.recipientUpazila}</p>
-              <p>Blood Group: {request.bloodGroup}</p>
-              <p>Date: {request.donationDate}</p>
-              <p>Time: {request.donationTime}</p>
-              <p>Hospital: {request.hospitalName}</p>
-              <p>Address: {request.fullAddress}</p>
-              <p>Requester: {request.requesterName} ({request.requesterEmail})</p>
-              <p>Message: {request.requestMessage}</p>
-              <p>Status: {request.status}</p>
-              <div className="mt-4">
-                <label className="block mb-2">Donor Name:</label>
-                <input
-                  type="text"
-                  value={user.displayName}
-                  readOnly
-                  className="block w-full p-2 border border-gray-300 rounded"
-                />
-                <label className="block mb-2 mt-2">Donor Email:</label>
-                <input
-                  type="email"
-                  value={user.email}
-                  readOnly
-                  className="block w-full p-2 border border-gray-300 rounded"
-                />
-                <button
-                  onClick={() => handleConfirmDonation(request._id)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
-                >
-                  Confirm Donation
-                </button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No pending donation requests found.</p>
-        )}
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="max-w-4xl mx-auto p-6 mt-20 bg-white shadow-2xl rounded-2xl"
+    >
+      <h2 className="text-3xl font-bold text-center mb-6 text-red-600">Donation Request Details</h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-gray-700">
+        <p className="flex items-center gap-2">
+          <FaUser className="text-red-500" />
+          <span className="font-semibold ">Requester:</span> {request.requesterName}
+        </p>
+        <p className="flex items-center gap-2">
+          <FaEnvelope className="text-blue-500" />
+          <span className="font-semibold">Email:</span> {request.requesterEmail}
+        </p>
+        <p className="flex items-center gap-2">
+          <FaUser className="text-green-600" />
+          <span className="font-semibold">Recipient:</span> {request.recipientName}
+        </p>
+        <p className="flex items-center gap-2">
+          <FaMapMarkerAlt className="text-orange-600" />
+          <span className="font-semibold">District:</span> {request.recipientDistrict}
+        </p>
+        <p className="flex items-center gap-2">
+          <FaMapMarkerAlt className="text-orange-400" />
+          <span className="font-semibold">Upazila:</span> {request.recipientUpazila}
+        </p>
+        <p className="flex items-center gap-2">
+          <FaHospital className="text-pink-500" />
+          <span className="font-semibold">Hospital:</span> {request.hospitalName}
+        </p>
+        <p className="flex items-center gap-2">
+          <FaMapMarkerAlt className="text-gray-600" />
+          <span className="font-semibold">Address:</span> {request.fullAddress}
+        </p>
+        <p className="flex items-center gap-2">
+          <FaTint className="text-red-700" />
+          <span className="font-semibold">Blood Group:</span> {request.bloodGroup}
+        </p>
+        <p className="flex items-center gap-2">
+          <FaCalendarAlt className="text-indigo-600" />
+          <span className="font-semibold">Date:</span> {request.donationDate}
+        </p>
+        <p className="flex items-center gap-2">
+          <FaClock className="text-yellow-600" />
+          <span className="font-semibold">Time:</span> {request.donationTime}
+        </p>
+        <p className="flex items-center gap-2 md:col-span-2">
+          <FaCommentDots className="text-gray-600" />
+          <span className="font-semibold">Message:</span> {request.requestMessage}
+        </p>
+        <p className="flex items-center gap-2">
+          <FaRegCheckCircle className="text-green-500" />
+          <span className="font-semibold">Status:</span>{' '}
+          <span
+            className={`px-3 py-1 rounded-full text-white text-sm ${
+              request.status === 'pending'
+                ? 'bg-yellow-500'
+                : request.status === 'inprogress'
+                ? 'bg-blue-500'
+                : 'bg-green-600'
+            }`}
+          >
+            {request.status}
+          </span>
+        </p>
       </div>
-    </div>
+
+      <div className="mt-8 text-center">
+        <button
+          onClick={handleConfirmDonate}
+          disabled={mutation.isLoading}
+          className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 transition-colors text-white px-8 py-3 text-lg font-semibold rounded-lg shadow-lg"
+        >
+          {mutation.isLoading ? 'Processing...' : 'Confirm to Donate'}
+        </button>
+      </div>
+    </motion.div>
   );
 };
 
 export default BloodDonationRequestDetail;
+
+
+

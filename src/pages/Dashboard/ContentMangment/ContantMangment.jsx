@@ -147,6 +147,7 @@ import { motion } from "framer-motion";
 
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
+import Loading from "../../../Components/Loading/Loading";
 
 const ContentManagement = () => {
   const { user } = useAuth();
@@ -173,7 +174,7 @@ const ContentManagement = () => {
   });
 
   if (loadingUserDoc) {
-    return <div>Loading...</div>;
+    return <Loading />
   }
 
   const isAdmin = userDoc?.role === "admin";
@@ -257,7 +258,7 @@ return (
         <table className="table table-zebra w-full text-center">
           <thead className="bg-base-200 text-base font-semibold">
             <tr>
-              <th>#</th>
+              <th>No</th>
               <th>Thumbnail</th>
               <th>Title</th>
               <th>Status</th>

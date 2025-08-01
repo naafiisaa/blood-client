@@ -6,9 +6,10 @@ import Swal from 'sweetalert2';
 import { AuthContext } from '../../Providers/AuthProvider';
 import districtsData from '../../assets/districts.json';
 import upazilasData from '../../assets/upazilas.json';
-import useAxiosPublic from '../../hooks/useAxiosPublic';
+
 import Lottie from 'react-lottie';
 import animationData from '../../assets/Animation - 1736856643838.json'
+import useAxiosPublic from '../../Hooks/useAxiosPublic';
 
 
 const Register = () => {
@@ -19,25 +20,25 @@ const Register = () => {
   const axiosPublic = useAxiosPublic(); // Use your custom hook
 
   const onSubmit = (data) => {
-    console.log(data);
+    //console.log(data);
     createUser(data.email, data.password)
       .then((userCredential) => {
-        console.log('User registered:', userCredential.user);
+        //console.log('User registered:', userCredential.user);
 
         updateUserProfile(data.name, data.avatar)
           .then(() => {
-            console.log('User profile info Updated');
+            //console.log('User profile info Updated');
             // Save user info to the server
             axiosPublic.post('/users', data)
               .then(response => {
-                console.log('User info saved:', response.data);
+               // console.log('User info saved:', response.data);
                 reset();
                 Swal.fire({
                   icon: 'success',
                   title: 'Registration Successful',
                   text: 'You have successfully registered!',
                 });
-                navigate('/login');
+                navigate('/');
               })
               .catch(error => {
                 console.error('Error saving user info:', error);
@@ -76,16 +77,16 @@ const Register = () => {
   return (
     <>
       <Helmet>
-        <title>Blood Bank | Register</title>
+        <title>Life Stream | Register</title>
       </Helmet>
-      <div className="hero bg-base-200 min-h-screen">
+      <div className="hero mt-20 bg-base-200 min-h-screen">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="text-center lg:text-left">
             <div className="text-center lg:text-left">
-              <Lottie options={defaultOptions} height={400} width={400} />
+              <Lottie options={defaultOptions} height={400} width={300} />
             </div>
           </div>
-          <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+          <div className=" bg-base-100 w-full max-w-xs shrink-0 shadow-2xl">
             <form onSubmit={handleSubmit(onSubmit)} className="card-body">
               <div className="form-control">
                 <label className="label">
@@ -153,20 +154,30 @@ const Register = () => {
                 </select>
                 {errors.upazila && <span className='text-red-600'>Upazila is required</span>}
               </div>
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Password</span>
-                </label>
-                <input type="password" placeholder="password" {...register("password", {
-                  required: true,
-                  pattern: /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
-                  minLength: 8,
-                  maxLength: 10
-                })} className="input input-bordered" />
-                {errors.password?.type === 'minLength' && <span className='text-red-600'>Password is Min = 8</span>}
-                {errors.password?.type === 'maxLength' && <span className='text-red-600'>Password is Max = 10</span>}
-                {errors.password?.type === 'pattern' && <span className='text-red-600'>Password must have one uppercase, one lowercase, and be 8 characters long</span>}
-              </div>
+            <div className="form-control">
+  <label className="label">
+    <span className="label-text">Password</span>
+  </label>
+  <input
+    type="password"
+    placeholder="password"
+    {...register("password", {
+      required: true,
+      pattern: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-z0-9!@#$%^&*]{6,10}$/,
+    })}
+    className="input input-bordered"
+  />
+
+  {errors.password?.type === 'required' && (
+    <span className='text-red-600'>Password is required</span>
+  )}
+  {errors.password?.type === 'pattern' && (
+    <span className='text-red-600'>
+      Password must be 6–10 characters long, include lowercase letters, at least one number, and one special character (!@#$%^&*)
+    </span>
+  )}
+</div>
+
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Confirm Password</span>
@@ -181,8 +192,11 @@ const Register = () => {
                 <button className="btn btn-primary">Register</button>
               </div>
             </form>
-            <p>Already have an account?</p>
-            <button className='text-red-600'><Link to="/login">Login</Link></button>
+            <p className='p-2'>Already have an account?</p>
+           <Link to="/login" className="btn btn-outline btn-primary bg-base-100 w-full text-center text-red-600 m-auto">
+  Login
+</Link>
+
           </div>
         </div>
       </div>

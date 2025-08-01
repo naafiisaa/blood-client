@@ -4,6 +4,7 @@ import { FaHome, FaUser, FaUsers, FaTachometerAlt, FaRegFileAlt, FaPlusCircle, F
 import useAuth from '../Hooks/useAuth';
 import useAxiosSecure from '../Hooks/useAxiosSecure';
 import '../CSS/Dashboard/Dashboard.css';
+import Loading from '../Components/Loading/Loading';
 
 const Dashboard = () => {
   const [user1, setUser] = useState(null);
@@ -27,7 +28,7 @@ const Dashboard = () => {
   if (!user1) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <span className="loading loading-spinner text-red-600"></span>
+        <Loading/>
       </div>
     );
   }
@@ -64,7 +65,7 @@ const Dashboard = () => {
           {user1.role === 'admin' && (
             <li>
               <NavLink
-                to="allUser"
+                to="all-users"
                 className={({ isActive }) =>
                   `flex items-center gap-2 px-3 py-2 rounded hover:bg-red-700 ${isActive ? 'bg-red-700' : ''}`
                 }
@@ -83,7 +84,7 @@ const Dashboard = () => {
                     `flex items-center gap-2 px-3 py-2 rounded hover:bg-red-700 ${isActive ? 'bg-red-700' : ''}`
                   }
                 >
-                  <FaListAlt /> All Donation Requests
+                  <FaListAlt /> All Blood Donation Requests
                 </NavLink>
               </li>
               <li>
@@ -112,7 +113,7 @@ const Dashboard = () => {
 
           <li>
             <NavLink
-              to="donationRequest"
+              to="create-donation-request"
               className={({ isActive }) =>
                 `flex items-center gap-2 px-3 py-2 rounded hover:bg-red-700 ${isActive ? 'bg-red-700' : ''}`
               }
@@ -124,7 +125,7 @@ const Dashboard = () => {
           {user1.role === 'donor' && (
             <li>
               <NavLink
-                to="myDonationRequest"
+                to="my-donation-requests"
                 className={({ isActive }) =>
                   `flex items-center gap-2 px-3 py-2 rounded hover:bg-red-700 ${isActive ? 'bg-red-700' : ''}`
                 }

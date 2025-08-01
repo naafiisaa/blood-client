@@ -8,7 +8,7 @@ import Home from "../pages/Home/Home";
 import Register from "../pages/Register/Register";
 import SearchDonars from "../pages/SearchDonars/SearchDonars";
 import Login from "../pages/Login/Login";
-import FoundingPage from "../Components/FoundingPage.jsx/FoundingPage";
+
 import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../layout.jsx/Dashboard";
 import Profile from "../pages/Dashboard/Profile/Profile";
@@ -25,96 +25,104 @@ import SearchPage from "../pages/Home/SearchPage/SearchPage";
 import BloodDonationRequest from "../pages/Home/BloodDonationRequest/BloodDonationRequest";
 import BloodDonationRequestDetail from "../pages/Home/BloodDonationRequestDetails/BloodDonationRequestDetail";
 import Blog from "../pages/Home/Blog/Blog";
-
+import EditDonationRequest from "../pages/Dashboard/MyDonationRequest/EditDonationRequest";
+import FundingPage from "../Components/FundingPage.jsx/FundingPage";
+import BlogDetails from "../pages/Home/Blog/BlogDetails";
 export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Main></Main>,
+    errorElement: <ErrorPage></ErrorPage>,
+    children: [
       {
-            path: "/",
-            element: <Main></Main>,
-            errorElement: <ErrorPage></ErrorPage>,
-            children: [
-                  {
-                        path: "/",
-                        element: <Home></Home>
-                  },
-                  {
-                        path: "login",
-                        element: <Login></Login>,
-                  },
-                  {
-                        path: "register",
-                        element: <Register></Register>,
-                  },
+        path: "/",
+        element: <Home></Home>
+      },
+      {
+        path: "/login",
+        element: <Login></Login>,
+      },
+      {
+        path: "register",
+        element: <Register></Register>,
+      },
+      {
+        path: "searchDonars",
+        element: <SearchDonars></SearchDonars>
+      },
+      {
+        path: "funding",
+        element: <PrivateRoute><FundingPage></FundingPage></PrivateRoute>
+      },
+      {
+        path:"searchPage",
+        element:<SearchPage></SearchPage>
+      },
+      {
+        path:"blood-donation-request",
+        element:<BloodDonationRequest></BloodDonationRequest>
+      },
+      {
+        path:"/donation-details/:id",
+        element:<PrivateRoute><BloodDonationRequestDetail></BloodDonationRequestDetail></PrivateRoute>
+      },
+      {
+        path:"blog",
+        element:<Blog></Blog>
+      },
+      {
+        path:"/blogs/:id",
+        element:<BlogDetails />
+      },
+    ]  // <-- close children array
+  },   // <-- close first root route object, ADD THIS MISSING CLOSING BRACE + COMMA
 
-                  {
-                        path: "searchDonars",
-                        element: <SearchDonars></SearchDonars>
-                  },
-                  {
-                        path: "founding",
-                        element: <PrivateRoute><FoundingPage></FoundingPage></PrivateRoute>
-                  },
-                  {
-                        path:"searchPage",
-                        element:<SearchPage></SearchPage>
-                  },
-                  {
-                        path:"blood-donation-request",
-                        element:<BloodDonationRequest></BloodDonationRequest>
-                  },
-                  {
-                        path: "blood-donation-request-details",
-                        element: <PrivateRoute>
-                          <BloodDonationRequestDetail></BloodDonationRequestDetail>
-                        </PrivateRoute>,
-                  },
-                  {
-                        path:"blog",
-                        element:<Blog></Blog>
-                  },
-            ]
+  {
+    path: 'dashboard',
+    element: <PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
+    errorElement: <ErrorPage></ErrorPage>,
+    children: [
+      {
+        path:"/dashboard",
+        element:<DashboardHome></DashboardHome>
+      },
+      //admin route
+      {
+        path:"all-users",
+        element:<AllUser></AllUser>
       },
       {
-            path: 'dashboard',
-            element: <PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
-            errorElement: <ErrorPage></ErrorPage>,
-            children: [
-                  {
-                        path:"/dashboard",
-                        element:<DashboardHome></DashboardHome>
-                  },
-                  //admin route
-                  {
-                        path:"allUser",
-                        element:<AllUser></AllUser>
-                  },
-                  {
-                        path:"all-blood-donation-request",
-                        element:<AllBloodDonationRequest></AllBloodDonationRequest>
-                  },
-                  {
-                        path:"content-management",
-                        element:<ContantMangment></ContantMangment>,
-                        children: [
-                              {
-                                    path:"add-blog",
-                                    element:<AddBlog></AddBlog>
-                              },
-                        ]
-                  },
-                  //all user route
-                  {
-                        path:"profile",
-                        element:<Profile></Profile>
-                  },
-                  {
-                        path:"donationRequest",
-                        element:<DonationRequest></DonationRequest>
-                  },
-                  {
-                        path:"myDonationRequest",
-                        element:<MyDonationRequest></MyDonationRequest>
-                  },
-                 
-            ]
+        path:"all-blood-donation-request",
+        element:<AllBloodDonationRequest></AllBloodDonationRequest>
       },
+      {
+        path:"content-management",
+        element:<ContantMangment></ContantMangment>,
+        children: [
+          {
+            path:"add-blog",
+            element:<AddBlog></AddBlog>
+          },
+        ]
+      },
+      //all user route
+      {
+        path:"profile",
+        element:<Profile></Profile>
+      },
+      {
+        path:"create-donation-request",
+        element:<DonationRequest></DonationRequest>
+      },
+      {
+  path: "edit-donation/:id",
+  element: <EditDonationRequest />,
+}
+,
+      {
+        path:"my-donation-requests",
+        element:<MyDonationRequest></MyDonationRequest>
+      },
+    ]
+  },
 ]);

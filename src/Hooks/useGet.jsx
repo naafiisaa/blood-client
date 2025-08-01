@@ -2,12 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 const fetchUser = async (email) => {
-  const token = localStorage.getItem('access_token'); // Retrieve the token from local storage
-  const response = await axios.get(`http://localhost:8001/users/${email}`, {
-    headers: {
-      Authorization: `Bearer ${token}` // Include the token in the request headers
-    }
-  });
+ const token = localStorage.getItem('access_token');
+
+const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/${email}`, {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+});
+
   return response.data;
 };
 
