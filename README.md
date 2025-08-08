@@ -79,7 +79,7 @@ See `package.json` for full list and versions. Some key dependencies:
 
 ## Getting Started (Local Setup)
 
-1. **Clone the repo**
+ **Clone the repo**
 
 
 git clone https://github.com/naafiisaa/blood-client.git
@@ -87,7 +87,8 @@ cd blood-client
 Install dependencies
 
 npm install
-Firebase setup
+
+**Firebase setup**
 
 Create a Firebase project at Firebase Console
 
@@ -108,7 +109,8 @@ REACT_APP_FIREBASE_APP_ID=your_app_id
 REACT_APP_API_BASE_URL=https://your-backend-api.com
 Replace values with your Firebase project config and backend API URL.
 
-Run the app locally
+**Run the app locally**
 
 npm run dev
+
 
