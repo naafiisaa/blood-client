@@ -10,7 +10,7 @@ const Footer = () => {
         <div>
           <img
             className="w-16 mb-2"
-            src="https://i.ibb.co.com/0y3TKf4/images-q-tbn-ANd9-Gc-QTFUPJ215o-Q9m-Bln91-MMv65-J4-IRMUi-JZXi-Dw-s.png"
+            src="https://i.ibb.co/WWwzMPSt/Nice-Png-blood-symbol-png-3647802.png"
             alt="Life Stream"
           />
           <p className="text-sm">

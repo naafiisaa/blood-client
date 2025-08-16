@@ -6,7 +6,7 @@ import Main from "../layout.jsx/Main";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import Home from "../pages/Home/Home";
 import Register from "../pages/Register/Register";
-import SearchDonars from "../pages/SearchDonars/SearchDonars";
+
 import Login from "../pages/Login/Login";
 
 import PrivateRoute from "./PrivateRoute";
@@ -46,10 +46,7 @@ export const router = createBrowserRouter([
         path: "register",
         element: <Register></Register>,
       },
-      {
-        path: "searchDonars",
-        element: <SearchDonars></SearchDonars>
-      },
+      
       {
         path: "funding",
         element: <PrivateRoute><FundingPage></FundingPage></PrivateRoute>

@@ -1,62 +1,92 @@
-const Feature = () => {
+import React from 'react';
+import { FaHandsHelping, FaHeartbeat, FaBookOpen } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+
+const features = [
+  {
+    id: 1,
+    icon: <FaHeartbeat className="text-red-500 w-14 h-14" />,
+    title: 'THE GLOBAL BLOOD CRISIS',
+    description:
+      'While many developed countries benefit from well-organized blood donation systems and widespread community participation, millions around the world still face shortages of safe, reliable blood supplies. Challenges such as lack of infrastructure, awareness, and resources contribute to this urgent gap, putting countless lives at risk.',
+  },
+  {
+    id: 2,
+    icon: <FaHandsHelping className="text-red-600 w-14 h-14" />,
+    title: 'EFFORTLESS DONATION EXPERIENCE',
+    description:
+      'We believe donating blood should be simple and stress-free. With conveniently located centers, flexible appointment options, and caring professionals, your safety and comfort are our top priority.',
+  },
+  {
+    id: 3,
+    icon: <FaBookOpen className="text-red-700 w-14 h-14" />,
+    title: 'KNOWLEDGE AND SUPPORT',
+    description:
+      "We empower donors with clear information and helpful resources. Whether you're a first-timer or regular donor, we provide expert guidance and ongoing communication to make your journey confident and rewarding.",
+  },
+];
+
+const containerVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: i => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.3,
+      duration: 0.6,
+      ease: 'easeOut',
+    },
+  }),
+};
+
+const cardHover = {
+  scale: 1.05,
+  boxShadow: '0 15px 25px rgba(239, 68, 68, 0.4)', // red-ish shadow
+  transition: { type: 'spring', stiffness: 300 },
+};
+
+const Featured = () => {
   return (
-    <>
-      <div className=" gap-7 my-12  px-4 md:px-6 border-2 grid grid-cols-1 xl:grid-cols-2 font-heading py-6 rounded-xl shadow-xl">
-        <div className="">
-          <img
-            src="https://i.ibb.co/wNX8rvBc/pexels-karolina-grabowska-4226921.jpg"
-            className="aspect-video object-cover rounded-xl shadow-xl"
-          />
-        </div>
-        <div className="">
-          <h1 className="font-bold text-red-600 underline">Featured</h1>
-          <h1 className=" text-primary font-bold tracking-tighter text-3xl">
-            WHY A BLOOD SHORTAGE?
-          </h1>
-          <hr />
-          <p className="mb-4">
-            In developed nations like the US and Europe, there are robust
-            systems in place for collecting, testing, and processing blood,
-            along with active citizen involvement in blood donation initiatives.
-            However, in numerous underprivileged countries, a lack of adequate
-            and safe blood remains a prevalent issue. Establishing blood
-            donation programs in these areas is hindered by various challenges,
-            resulting in insufficient availability of safe blood.
-          </p>
-          <h1 className=" text-accent font-bold tracking-tighter text-2xl">
-            WHY US?
-          </h1>
-          <hr />
-          <p>
-            At <span className="text-accent font-bold">LifeStream</span>, we
-            are committed to making a meaningful impact through blood donation.
-            Here is why you should choose us:
-          </p>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-4">
-            <div className="text-sm bg-white shadow-xl rounded-xl p-2 border-2 border-accent">
-              <h1 className="font-bold">Convenience and Accessibility</h1>
-              <hr />
-              <p>
-                We strive to make the donation process easy and accessible for
-                everyone. With multiple locations, flexible scheduling, and
-                friendly staff, we ensure a comfortable experience for our
-                donors.
-              </p>
+    <section className="max-w-7xl mx-auto px-6 py-16 bg-gradient-to-br from-red-50 to-white rounded-xl shadow-xl">
+      <motion.h2
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        className="text-4xl font-extrabold text-red-600 mb-12 text-center relative inline-block"
+      >
+        Featured
+        <motion.span
+          layoutId="underline"
+          className="block h-1 w-24 bg-red-600 rounded mt-2 mx-auto"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+        />
+      </motion.h2>
+
+      <div className="grid gap-12 md:grid-cols-3">
+        {features.map(({ id, icon, title, description }, index) => (
+          <motion.article
+            key={id}
+            custom={index}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={containerVariants}
+            whileHover={cardHover}
+            className="bg-white rounded-xl p-8 flex flex-col items-start space-y-6 cursor-pointer select-none"
+          >
+            <div className="bg-red-100 rounded-full p-5 mb-4 shadow-md">
+              {icon}
             </div>
-            <div className="text-sm bg-white shadow-xl rounded-xl p-2 border-2 border-accent">
-              <h1 className="font-bold">Education and Blogs</h1>
-              <hr />
-              <p>
-                Our team provides information and guidance throughout the
-                donation process. We are here to answer your questions, address
-                concerns, and offer ongoing support to our donors.
-              </p>
-            </div>
-          </div>
-        </div>
+            <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
+            <p className="text-gray-700 leading-relaxed">{description}</p>
+          </motion.article>
+        ))}
       </div>
-    </>
+    </section>
   );
 };
 
-export default Feature;
+export default Featured;
+

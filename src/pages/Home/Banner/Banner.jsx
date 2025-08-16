@@ -7,7 +7,7 @@ const Banner = () => {
     <div
       className="hero min-h-screen bg-cover bg-center"
       style={{
-        backgroundImage: "url(https://i.ibb.co.com/TLmFY3n/banner-mobile.jpg)",
+        backgroundImage: "url(https://i.ibb.co/MxSZwzys/Chat-GPT-Image-Aug-3-2025-08-56-30-AM.png)",
       }}
     >
       <div className="hero-overlay animate-red-pulse"></div>
@@ -20,7 +20,7 @@ const Banner = () => {
         >
           <Link to="register">
             <motion.button
-              className="btn btn-md btn-error"
+              className="btn btn-md btn-error mt-20"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -29,7 +29,7 @@ const Banner = () => {
           </Link>
           <Link to="searchPage">
             <motion.button
-              className="btn btn-md btn-error"
+              className="btn btn-md btn-error mt-20"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >

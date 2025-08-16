@@ -216,18 +216,37 @@ const Navbar = () => {
 
   // NavLinks for before login
   const guestLinks = (
-    <>
+    <>  
+     <li><NavLink to="/">Home</NavLink></li>
+       <li><NavLink to="/blog">Blog</NavLink></li>
       <li><NavLink to="/blood-donation-request">Donation Requests</NavLink></li>
-      <li><NavLink to="/blog">Blog</NavLink></li>
+    
+   
     </>
   );
 
   // NavLinks for after login
   const userLinks = (
-    <>
+    <> <li><NavLink to="/">Home</NavLink></li>
+    <li><NavLink to="/blog">Blog</NavLink></li>
       <li><NavLink to="/blood-donation-request">Donation Requests</NavLink></li>
       <li><NavLink to="/funding">Funding</NavLink></li>
-      <li><NavLink to="/blog">Blog</NavLink></li>
+      
+                        <Link
+                    to={
+                      userInfo?.role === 'Admin'
+                        ? '/dashboard/adminHome'
+                        : userInfo?.role === 'Volunteer'
+                        ? '/dashboard/volunteerHome'
+                        : userInfo?.role === 'Donor'
+                        ? '/dashboard/donorHome'
+                        : '/dashboard'
+                    }
+                    className=" "
+                  >
+                    Dashboard
+                  </Link>
+     
     </>
   );
 
@@ -249,7 +268,7 @@ const Navbar = () => {
         {/* Logo */}
         <div className="flex items-center gap-2">
           <img
-            src="https://i.ibb.co.com/0y3TKf4/images-q-tbn-ANd9-Gc-QTFUPJ215o-Q9m-Bln91-MMv65-J4-IRMUi-JZXi-Dw-s.png"
+            src="https://i.ibb.co/WWwzMPSt/Nice-Png-blood-symbol-png-3647802.png"
             alt="Logo"
             className="w-8 h-8"
           />
