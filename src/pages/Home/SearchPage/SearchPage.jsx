@@ -40,9 +40,9 @@ const SearchPage = () => {
 
 
   return (
-    <div className="max-w-6xl mt-20 mx-auto px-4 py-8">
+    <div className=" lg:w-11/12 mt-10 mx-auto md:px-10 px-4 py-8">
       <motion.h2
-        className="text-3xl font-bold text-center mb-8"
+        className="md:text-3xl  text-red-600 text-2xl font-bold text-center mb-8"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >

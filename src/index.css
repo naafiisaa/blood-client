@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* No JS imports! Do NOT import tailwindcss/lib/index.js */
+
+
+:root {
+  --primary: 255 0 0;      /* #ff0000 */
+  --secondary: 252 84 90;  /* #fc545a */
+  --accent: 249 127 93;    /* #f97f5d */
+  --neutral: 51 26 26;     /* #331a1a */
+  --background: 250 210 210; /* #faf5f5 */
+}
+
+.dark {
+  --primary: 255 0 0;      /* #ff0000 */
+  --secondary: 171 3 8;    /* #ab0308 */
+  --accent: 162 40 6;      /* #a22806 */
+  --neutral: 255 255 255;     /* #331a1a */
+  --background: 10 5 5;      /* #0a0505 */
+}

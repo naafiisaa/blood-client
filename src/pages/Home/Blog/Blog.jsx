@@ -135,8 +135,9 @@ const Blog = () => {
   }, [axiosPublic]);
 
   return (
-    <div className="p-4 max-w-7xl mt-20 mx-auto">
+    <div className=" mt-20 mx-auto overflow-hidden">
       <h2 className="text-3xl font-extrabold mb-8 text-center text-pink-600">Latest Blogs</h2>
+     <div className='lg:w-11/12  mx-auto md:px-10 px-4'>
       <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
         {blogs.map((blog) => (
           <motion.div
@@ -166,7 +167,7 @@ const Blog = () => {
             </div>
           </motion.div>
         ))}
-      </div>
+      </div></div>
     </div>
   );
 };

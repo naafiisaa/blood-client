@@ -5,17 +5,18 @@ import { Helmet } from 'react-helmet-async';
 
 const WhyDonate = () => {
   return (
-    <div className="min-h-screen bg-base-100 p-6 md:p-12">
+    <div className="min-h-screen my-12 bg-base-100 ">
       <Helmet>
         <title>Why Donate | BloodConnect</title>
       </Helmet>
 
       <motion.div
-        className="text-center mb-10"
+        className="text-center lg:w-11/12 mx-auto md:px-10 px-4 mb-10"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
+
         <h1 className="text-4xl md:text-5xl font-bold text-error mb-4">Why Donate Blood?</h1>
         <p className="text-lg text-gray-600">
           Every drop counts. Your blood can save lives and give hope.
@@ -33,7 +34,7 @@ const WhyDonate = () => {
         </motion.div>
 
         <motion.div
-          className="space-y-4 text-gray-700"
+          className="space-y-4  px-4 text-gray-700"
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}

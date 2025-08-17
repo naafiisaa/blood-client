@@ -42,7 +42,7 @@ const FundingPage = () => {
   }, [axiosSecure, page]);
 
   return (
-    <div className="p-4 mt-20">
+    <div className="py-4 lg:w-11/12 mx-auto px-4 md:px-10 mt-20">
       {/* <SectionTitle heading="Funding Records" subHeading="  Life Stream" /> */}
 <h1 className='font-bold text-red-600 text-xl md:text-2xl lg:text-4xl my-4 text-center'>Funding records</h1>
       {/* Give Fund Button */}

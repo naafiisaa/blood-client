@@ -32,7 +32,8 @@ const BlogDetails = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto mt-24 p-6 bg-white rounded-lg shadow">
+    <div className=" mx-auto  py-6 bg-white overflow-hidden shadow">
+      <div className='lg:w-11/12 px-4 mt-20 md:px-10 overflow-hidden mx-auto'>
       <h1 className="text-3xl font-bold text-pink-600 mb-4">{blog.title}</h1>
       <img
         src={blog.thumbnail}
@@ -54,6 +55,7 @@ const BlogDetails = () => {
         >
           ← Back to Blogs
         </Link>
+      </div>
       </div>
     </div>
   );

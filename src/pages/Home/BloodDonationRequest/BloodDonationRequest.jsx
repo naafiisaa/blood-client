@@ -22,8 +22,9 @@ const BloodDonationRequest = () => {
   if (isLoading) return <Loading />
 
   return (
-    <div className="max-w-6xl mt-20 mx-auto p-4">
-      <h1 className="text-3xl font-bold text-red-600 mb-6 text-center"> Blood Donation Requests</h1>
+    <div className=" mt-20 mx-auto overflow-hidden">
+      <h1 className="md:text-3xl text-2xl font-bold text-red-600 mb-6 text-center"> Blood Donation Requests</h1>
+     <div className='lg:w-11/12 mx-auto md:px-10 px-4'>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {requests.map((req) => (
      <div key={req._id} className="border bg-red-50 shadow-lg rounded-xl p-5 space-y-3">
@@ -44,6 +45,7 @@ const BloodDonationRequest = () => {
 
         ))}
       </div>
+    </div>
     </div>
   );
 };

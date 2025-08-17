@@ -47,12 +47,12 @@ const cardHover = {
 
 const Featured = () => {
   return (
-    <section className="max-w-7xl mx-auto px-6 py-16 bg-gradient-to-br from-red-50 to-white rounded-xl shadow-xl">
+    <section className="  bg-gradient-to-br from-red-50 to-white rounded-xl shadow-xl">
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
-        className="text-4xl font-extrabold text-red-600 mb-12 text-center relative inline-block"
+        className="text-4xl font-extrabold text-red-600 mb-12 text-center"
       >
         Featured
         <motion.span
@@ -64,7 +64,7 @@ const Featured = () => {
         />
       </motion.h2>
 
-      <div className="grid gap-12 md:grid-cols-3">
+      <div className="grid gap-12 lg:w-11/12 mx-auto md:px-10 px-4 md:grid-cols-3">
         {features.map(({ id, icon, title, description }, index) => (
           <motion.article
             key={id}

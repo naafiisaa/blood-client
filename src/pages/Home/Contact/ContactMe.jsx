@@ -57,7 +57,7 @@ const ContactMe = () => {
   };
 
   return (
-    <section className="max-w-6xl mx-auto p-6 mt-12 bg-white rounded-xl shadow-lg">
+    <section className=" mx-auto  bg-white rounded-xl shadow-lg">
       <h2 className="text-4xl font-extrabold mb-8 text-center text-red-600">Contact Us</h2>
 
       <div className="mb-8 text-center text-lg font-medium">
@@ -65,10 +65,10 @@ const ContactMe = () => {
         <p className="text-red-600 text-xl font-bold">{contactNumber}</p>
       </div>
 
-      <div className="flex flex-col lg:flex-row items-center gap-10">
+      <div className="flex lg:w-11/12 mx-auto md:px-10 px-4 flex-col lg:flex-row items-center gap-10">
         {/* Animation FIRST */}
         <motion.div
-          className="w-full max-w-lg"
+          className="w-full"
           {...colorPulse}
           animate="animate"
         >
@@ -78,7 +78,7 @@ const ContactMe = () => {
         {/* Form SECOND */}
         <form
           onSubmit={handleSubmit}
-          className="w-full max-w-md space-y-6"
+          className=" w-full  max-w-md space-y-6"
           noValidate
         >
           <div>
