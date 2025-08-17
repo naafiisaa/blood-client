@@ -20,7 +20,7 @@ const Banner = () => {
         >
           <Link to="register">
             <motion.button
-              className="btn btn-md btn-error mt-20"
+              className="btn btn-md btn-primary mt-20"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -29,7 +29,7 @@ const Banner = () => {
           </Link>
           <Link to="searchPage">
             <motion.button
-              className="btn btn-md btn-error mt-20"
+              className="btn btn-md btn-primary mt-20"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >

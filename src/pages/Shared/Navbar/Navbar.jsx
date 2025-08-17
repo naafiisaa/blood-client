@@ -33,6 +33,7 @@ const Navbar = () => {
         secondary: getCSSVar("--secondary"),
         accent: getCSSVar("--accent"),
         neutral: getCSSVar("--neutral"),
+        text: getCSSVar("--text"),
         background: getCSSVar("--background"),
       });
     });
@@ -108,7 +109,7 @@ const Navbar = () => {
   return (
     <div
       className="shadow-md fixed top-0 left-0 w-full z-50 transition-colors"
-      style={{ backgroundColor: `rgb(${colors.background})`, color: `rgb(${colors.neutral})` }}
+      style={{ backgroundColor: `rgb(${colors.background})`, color: `rgb(${colors.text})` }}
     >
       <div className="navbar lg:w-11/12 mx-auto md:px-10 px-4 py-2 flex justify-between items-center">
 
@@ -150,14 +151,14 @@ const Navbar = () => {
           ) : user ? (
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                <div className="md:w-8 w-6 rounded-full border-2" style={{ borderColor: `rgb(${colors.primary})` }}>
+                <div className="md:w-8 w-7 rounded-full border-2" style={{ borderColor: `rgb(${colors.primary})` }}>
                   <img src={userInfo?.avatar || user.photoURL} alt="User" />
                 </div>
               </div>
               <ul
                 tabIndex={0}
                 className="dropdown-content z-[1] mt-3 p-3 shadow rounded-box w-52"
-                style={{ backgroundColor: `rgb(${colors.background})`, color: `rgb(${colors.neutral})` }}
+                style={{ backgroundColor: `rgb(${colors.background})`, color: `rgb(${colors.text})` }}
               >
                 <li className="text-center font-semibold">{userInfo?.name || user.displayName}</li>
                 <li className="text-sm text-center">{user.email}</li>
@@ -175,9 +176,9 @@ const Navbar = () => {
                         ? "/dashboard/donorHome"
                         : "/dashboard"
                     }
-                    className="w-full py-2 rounded text-center font-semibold"
+                    className=" w-full btn py-2 rounded text-center font-semibold"
                     style={{
-                      border: `2px solid rgb(${colors.primary})`,
+                    
                       color: `rgb(${colors.primary})`,
                       backgroundColor: "transparent",
                     }}
@@ -191,7 +192,7 @@ const Navbar = () => {
                     className="w-full py-2 rounded font-semibold"
                     style={{
                       backgroundColor: `rgb(${colors.primary})`,
-                      color: `rgb(${colors.neutral})`,
+                      color: `rgb(${colors.text})`,
                     }}
                   >
                     Logout
@@ -218,7 +219,7 @@ const Navbar = () => {
       {open && (
         <ul
           className="lg:hidden flex flex-col shadow-md p-4 space-y-3"
-          style={{ backgroundColor: `rgb(${colors.background})`, color: `rgb(${colors.neutral})` }}
+          style={{ backgroundColor: `rgb(${colors.background})`, color: `rgb(${colors.text})` }}
         >
           {user ? userLinks : guestLinks}
         </ul>
