@@ -56,7 +56,7 @@ const Dashboard = () => {
                 `flex items-center gap-2 px-3 py-2 rounded hover:bg-red-700 ${isActive ? 'bg-red-700' : ''}`
               }
             >
-              <FaTachometerAlt /> Dashboard Home
+              <FaTachometerAlt /> Overview
             </NavLink>
           </li>
 
