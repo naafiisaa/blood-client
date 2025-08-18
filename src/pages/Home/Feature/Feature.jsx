@@ -89,8 +89,7 @@
 // };
 
 // export default Featured;
-
-import React, { useState, useEffect } from 'react';
+ import React, { useState, useEffect } from 'react';
 import { FaHandsHelping, FaHeartbeat, FaBookOpen } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
@@ -190,4 +189,7 @@ const Featured = () => {
   );
 };
 
-export default Featured;
+export default Featured; 
+ 
+
+
