@@ -1,31 +1,93 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { FiUser, FiHeart } from "react-icons/fi";
+
+const getCSSVar = (name) =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 const testimonialsData = [
-  { name: 'Ali Rahman', story: 'Donating blood saved 3 lives. Truly fulfilling experience!' },
-  { name: 'Nafisa Chowdhury', story: 'Easy and safe process, staff were very supportive.' },
-  { name: 'Tanvir Ahmed', story: 'I encourage everyone to donate at least once a year.' },
+  {
+    name: "Ali Rahman",
+    story: "Donating blood saved 3 lives. Truly fulfilling experience!",
+    icon: <FiHeart />,
+  },
+  {
+    name: "Nafisa Chowdhury",
+    story: "Easy and safe process, staff were very supportive.",
+    icon: <FiUser />,
+  },
+  {
+    name: "Tanvir Ahmed",
+    story: "I encourage everyone to donate at least once a year.",
+    icon: <FiHeart />,
+  },
+  {
+    name: "Farhana Islam",
+    story: "Seeing my small act help children in need motivates me to keep donating.",
+    icon: <FiUser />,
+  },
 ];
 
-const Testimonials = ({ colors }) => {
+const Testimonials = () => {
+  const [colors, setColors] = useState({
+    primary: getCSSVar("--primary"),
+    secondary: getCSSVar("--secondary"),
+    text: getCSSVar("--text"),
+    background: getCSSVar("--background"),
+    accent: getCSSVar("--accent"),
+    neutral: getCSSVar("--neutral"),
+  });
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setColors({
+        primary: getCSSVar("--primary"),
+        secondary: getCSSVar("--secondary"),
+        text: getCSSVar("--text"),
+        background: getCSSVar("--background"),
+        accent: getCSSVar("--accent"),
+        neutral: getCSSVar("--neutral"),
+      });
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="py-12 bg-gradient-to-br from-red-50 to-white rounded-xl shadow-xl">
-      <h2 className="text-4xl font-extrabold text-center mb-10" style={{ color: `rgb(${colors.primary})` }}>
+    <section className="py-10   shadow-xl" style={{ backgroundColor: `rgb(${colors.neutral})` }}>
+      <h2
+        className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-10"
+        style={{ color: `rgb(${colors.primary})` }}
+      >
         Testimonials & Stories
       </h2>
 
-      <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 px-4">
+      <div className="lg:w-11/12 md:px-10 mx-auto grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
         {testimonialsData.map((t, idx) => (
           <motion.div
             key={idx}
-            className="p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow"
-            style={{ backgroundColor: `rgb(${colors.neutral})`, color: `rgb(${colors.text})` }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.2 }}
+            className="p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-between"
+            style={{
+              backgroundColor: `rgb(${colors.background})`,
+              color: `rgb(${colors.text})`,
+            }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: idx * 0.2, duration: 0.5 }}
           >
-            <p className="mb-4 text-gray-700">{t.story}</p>
-            <h4 className="font-semibold" style={{ color: `rgb(${colors.primary})` }}>— {t.name}</h4>
+            <div className="text-3xl mb-3 text-red-500">{t.icon}</div>
+            <p className="mb-4 text-sm sm:text-base md:text-lg leading-relaxed">
+              "{t.story}"
+            </p>
+            <h4
+              className="font-semibold text-base sm:text-lg md:text-xl"
+              style={{ color: `rgb(${colors.primary})` }}
+            >
+              — {t.name}
+            </h4>
           </motion.div>
         ))}
       </div>
@@ -34,3 +96,4 @@ const Testimonials = ({ colors }) => {
 };
 
 export default Testimonials;
+
