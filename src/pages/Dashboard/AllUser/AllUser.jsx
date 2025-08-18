@@ -286,7 +286,7 @@ const AllUser = () => {
 
   return (
     <div
-      className="px-4 md:px-10 py-8 max-w-7xl mx-auto rounded-lg"
+      className="px-4 md:px-10 py-8  mx-auto rounded-lg"
       style={{ backgroundColor: `rgb(${colors.neutral})`, color: `rgb(${colors.text})` }}
     >
       <h2 className="text-3xl font-bold mb-6" style={{ color: `rgb(${colors.primary})` }}>
