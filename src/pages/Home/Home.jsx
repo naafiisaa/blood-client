@@ -7,7 +7,7 @@ import WhyDonate from './WhyDonate/WhyDonate';
 
 const Home = () => {
       return (
-            <div className='mb-12'>
+            <div className=''>
                  
                   <Banner ></Banner>
                   <WhyDonate></WhyDonate>

@@ -1,15 +1,39 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-
 import { BsDropletHalf, BsCalendarDate, BsClock } from 'react-icons/bs';
 import { FiMapPin } from 'react-icons/fi';
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
 import Loading from '../../../Components/Loading/Loading';
 
+const getCSSVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
 const BloodDonationRequest = () => {
   const axiosPublic = useAxiosPublic();
+  const [colors, setColors] = useState({
+    primary: getCSSVar('--primary'),
+    secondary: getCSSVar('--secondary'),
+    text: getCSSVar('--text'),
+    background: getCSSVar('--background'),
+     neutral: getCSSVar('--neutral'),
+    accent: getCSSVar('--accent'),
+  });
+
+  // Update colors dynamically on theme change
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setColors({
+        primary: getCSSVar('--primary'),
+        secondary: getCSSVar('--secondary'),
+        text: getCSSVar('--text'),
+        background: getCSSVar('--background'),
+         neutral: getCSSVar('--neutral'),
+    accent: getCSSVar('--accent'),
+      });
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ['pendingDonationRequests'],
@@ -19,38 +43,121 @@ const BloodDonationRequest = () => {
     },
   });
 
-  if (isLoading) return <Loading />
+  if (isLoading) return <Loading />;
 
   return (
-    <div className=" mt-20 mx-auto overflow-hidden">
-      <h1 className="md:text-3xl text-2xl font-bold text-red-600 mb-6 text-center"> Blood Donation Requests</h1>
-     <div className='lg:w-11/12 mx-auto md:px-10 px-4'>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {requests.map((req) => (
-     <div key={req._id} className="border bg-red-50 shadow-lg rounded-xl p-5 space-y-3">
-  <h2 className="text-xl text-red-700  font-bold">{req.recipientName}</h2>
-  <p className="text-sm font-medium text-red-500">Requested by: {req.requesterName} ({req.requesterEmail})</p>
-  <p className="flex items-center font-medium text-red-500 gap-2"><FiMapPin /> {req.fullAddress}, {req.recipientUpazila}, {req.recipientDistrict}</p>
-  <p className="flex items-center text-red-500 gap-2"><BsDropletHalf /> Blood Group: {req.bloodGroup}</p>
-  <p className="flex items-center text-red-500 gap-2"><BsCalendarDate /> Date: {req.donationDate}</p>
-  <p className="flex items-center text-red-500 gap-2"><BsClock /> Time: {req.donationTime}</p>
-  <p className="text-gray-500 mb-2 italic">Note: {req.requestMessage}</p>
-  <Link
-    to={`/donation-details/${req._id}`}
-    className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 transition-colors text-white btn rounded-lg shadow-lg"
-  >
-    View
-  </Link>
-</div>
-
-        ))}
+    <div className=" mx-auto py-10  overflow-hidden" style={{ backgroundColor: `rgb(${colors.background})`, color: `rgb(${colors.text})` }}>
+      <h1 className="md:text-3xl mt-20 text-2xl font-bold mb-6 text-center" style={{ color: `rgb(${colors.primary})` }}>
+        Blood Donation Requests
+      </h1>
+      <div className="lg:w-11/12 mx-auto md:px-10 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {requests.map(req => (
+           
+ <div
+              key={req._id}
+              className="border shadow-lg rounded-xl p-5 space-y-3 transition duration-300"
+              style={{
+                backgroundColor: `rgb(${colors.neutral})`,
+                borderColor: `rgb(${colors.primary})`,
+                color: `rgb(${colors.text})`,
+              }}
+            >
+              <h2 className="text-xl font-bold" style={{ color: `rgb(${colors.primary})` }}>
+                {req.recipientName}
+              </h2>
+              <p style={{ color: `rgb(${colors.text})` }}>
+                Requested by: {req.requesterName} ({req.requesterEmail})
+              </p>
+              <p className="flex items-center gap-2" style={{ color: `rgb(${colors.text})` }}>
+                <FiMapPin /> {req.fullAddress}, {req.recipientUpazila}, {req.recipientDistrict}
+              </p>
+              <p className="flex items-center gap-2" style={{ color: `rgb(${colors.text})` }}>
+                <BsDropletHalf /> Blood Group: {req.bloodGroup}
+              </p>
+              <p className="flex items-center gap-2" style={{ color: `rgb(${colors.text})` }}>
+                <BsCalendarDate /> Date: {req.donationDate}
+              </p>
+              <p className="flex items-center gap-2" style={{ color: `rgb(${colors.text})` }}>
+                <BsClock /> Time: {req.donationTime}
+              </p>
+              <p className=" mb-2 italic" style={{ color: `rgb(${colors.text},0.2)` }}>Note: {req.requestMessage}</p>
+              <Link
+                to={`/donation-details/${req._id}`}
+                className="btn rounded-lg shadow-lg px-4 py-2 transition font-semibold"
+                style={{
+                  background: `linear-gradient(90deg, rgb(${colors.secondary}), rgb(${colors.primary}))`,
+                  color: `rgb(${colors.neutral})`,
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = `rgb(${colors.secondary})`}
+                onMouseLeave={e => e.currentTarget.style.background = `linear-gradient(90deg, rgb(${colors.primary}), rgb(${colors.secondary}))`}
+              >
+                View
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
     </div>
   );
 };
 
 export default BloodDonationRequest;
+
+
+
+// import React from 'react';
+// import { Link } from 'react-router-dom';
+// import { useQuery } from '@tanstack/react-query';
+
+// import { BsDropletHalf, BsCalendarDate, BsClock } from 'react-icons/bs';
+// import { FiMapPin } from 'react-icons/fi';
+// import useAxiosPublic from '../../../Hooks/useAxiosPublic';
+// import Loading from '../../../Components/Loading/Loading';
+
+// const BloodDonationRequest = () => {
+//   const axiosPublic = useAxiosPublic();
+
+//   const { data: requests = [], isLoading } = useQuery({
+//     queryKey: ['pendingDonationRequests'],
+//     queryFn: async () => {
+//       const res = await axiosPublic.get('/donation-requests?status=pending');
+//       return res.data.donationRequests;
+//     },
+//   });
+
+//   if (isLoading) return <Loading />
+
+//   return (
+//     <div className=" mt-20 mx-auto overflow-hidden">
+//       <h1 className="md:text-3xl text-2xl font-bold text-red-600 mb-6 text-center"> Blood Donation Requests</h1>
+//      <div className='lg:w-11/12 mx-auto md:px-10 px-4'>
+//       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+//         {requests.map((req) => (
+//      <div key={req._id} className="border bg-red-50 shadow-lg rounded-xl p-5 space-y-3">
+//   <h2 className="text-xl text-red-700  font-bold">{req.recipientName}</h2>
+//   <p className="text-sm font-medium text-red-500">Requested by: {req.requesterName} ({req.requesterEmail})</p>
+//   <p className="flex items-center font-medium text-red-500 gap-2"><FiMapPin /> {req.fullAddress}, {req.recipientUpazila}, {req.recipientDistrict}</p>
+//   <p className="flex items-center text-red-500 gap-2"><BsDropletHalf /> Blood Group: {req.bloodGroup}</p>
+//   <p className="flex items-center text-red-500 gap-2"><BsCalendarDate /> Date: {req.donationDate}</p>
+//   <p className="flex items-center text-red-500 gap-2"><BsClock /> Time: {req.donationTime}</p>
+//   <p className="text-gray-500 mb-2 italic">Note: {req.requestMessage}</p>
+//   <Link
+//     to={`/donation-details/${req._id}`}
+//     className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 transition-colors text-white btn rounded-lg shadow-lg"
+//   >
+//     View
+//   </Link>
+// </div>
+
+//         ))}
+//       </div>
+//     </div>
+//     </div>
+//   );
+// };
+
+// export default BloodDonationRequest;
 
 // import React, { useState, useEffect } from 'react';
 // import useAxiosPublic from '../../../hooks/useAxiosPublic';
