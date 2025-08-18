@@ -3,21 +3,24 @@ import Swal from "sweetalert2";
 import { FaTrashAlt } from "react-icons/fa";
 import { MdOutlinePublish } from "react-icons/md";
 import { RiUnpinLine } from "react-icons/ri";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import Loading from "../../../Components/Loading/Loading";
 
-const getCSSVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+// helper for pulling css vars
+const getCSSVar = (name) =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 const ContentManagement = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
-  const [filter, setFilter] = useState("all");
 
+  const [filter, setFilter] = useState("all");
   const [colors, setColors] = useState({
     primary: getCSSVar("--primary"),
     secondary: getCSSVar("--secondary"),
@@ -27,6 +30,7 @@ const ContentManagement = () => {
     neutral: getCSSVar("--neutral"),
   });
 
+  // watch for dark/light mode change
   useEffect(() => {
     const observer = new MutationObserver(() => {
       setColors({
@@ -38,25 +42,36 @@ const ContentManagement = () => {
         neutral: getCSSVar("--neutral"),
       });
     });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
     return () => observer.disconnect();
   }, []);
 
   const { data: blogs = [], refetch } = useQuery({
     queryKey: ["blogs"],
-    queryFn: async () => (await axiosSecure.get("/blogs")).data.blogs || [],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/blogs");
+      return res.data.blogs || [];
+    },
   });
 
   const { data: userDoc, isLoading: loadingUserDoc } = useQuery({
     enabled: !!user?.email,
     queryKey: ["userRole", user?.email],
-    queryFn: async () => (await axiosSecure.get(`/users/${user.email}`)).data,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users/${user.email}`);
+      return res.data;
+    },
   });
 
   if (loadingUserDoc) return <Loading />;
+
   const isAdmin = userDoc?.role === "admin";
 
-  const filteredBlogs = filter === "all" ? blogs : blogs.filter(blog => blog.status === filter);
+  const filteredBlogs =
+    filter === "all" ? blogs : blogs.filter((blog) => blog.status === filter);
 
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
@@ -64,10 +79,11 @@ const ContentManagement = () => {
       text: "This action cannot be undone.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: colors.primary,
-      cancelButtonColor: colors.secondary,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#aaa",
       confirmButtonText: "Yes, delete it!",
     });
+
     if (confirm.isConfirmed) {
       const res = await axiosSecure.delete(`/blogs/${id}`);
       if (res.data.deletedCount > 0) {
@@ -79,7 +95,10 @@ const ContentManagement = () => {
 
   const handleToggleStatus = async (id, currentStatus) => {
     const newStatus = currentStatus === "draft" ? "published" : "draft";
-    const res = await axiosSecure.patch(`/blogs/${id}/status`, { status: newStatus });
+    const res = await axiosSecure.patch(`/blogs/${id}/status`, {
+      status: newStatus,
+    });
+
     if (res.data.modifiedCount > 0) {
       Swal.fire("Success!", `Blog status set to ${newStatus}`, "success");
       refetch();
@@ -88,23 +107,33 @@ const ContentManagement = () => {
 
   return (
     <motion.div
-      className="w-full px-4 md:px-10"
-      style={{ color: colors.text }}
+      className="w-full px-4 md:px-10 min-h-screen rounded-xl py-10  shadow-lg"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
+      style={{
+        backgroundColor: `rgb(${colors.neutral})`,
+        color: `rgb(${colors.text})`,
+      }}
     >
+      {/* nested routes */}
       <div className="lg:mb-24 md:mb-8 mb-2">
         <Outlet />
       </div>
 
+      {/* header + filter */}
       <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
-        <h2 className="text-3xl font-bold" style={{ color: colors.primary }}>Manage Blogs</h2>
+        <h2
+          className="text-3xl font-bold"
+          style={{ color: `rgb(${colors.primary})` }}
+        >
+          Manage Blogs
+        </h2>
 
         <div className="flex gap-3">
           <select
             className="select select-bordered"
-            style={{ backgroundColor: colors.background, color: colors.text, borderColor: colors.accent }}
+            style={{ backgroundColor: `rgb(${colors.secondary})`, color: `rgb(${colors.text})` }}
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           >
@@ -116,16 +145,26 @@ const ContentManagement = () => {
           <button
             onClick={() => navigate("/dashboard/content-management/add-blog")}
             className="btn"
-            style={{ backgroundColor: colors.primary, color: colors.background }}
+            style={{
+              backgroundColor: `rgb(${colors.primary})`,
+              color:`rgb(${colors.text})`,
+            }}
           >
             Add Blog
           </button>
         </div>
       </div>
 
-      <div className="overflow-x-auto shadow-md border rounded-xl" style={{ backgroundColor: colors.neutral }}>
-        <table className="table table-zebra w-full text-center" style={{ color: colors.text }}>
-          <thead style={{ backgroundColor: colors.primary, color: colors.background }}>
+      {/* table */}
+      <div
+        className="overflow-x-auto shadow-md border rounded-xl"
+        style={{ backgroundColor: `rgb(${colors.background})`,  }}
+      >
+        <table className="table table-zebra w-full text-center">
+          <thead
+            className="text-base font-semibold"
+            style={{ backgroundColor: `rgb(${colors.secondary})`,color:`rgb(${colors.text})`, }}
+          >
             <tr>
               <th>No</th>
               <th>Thumbnail</th>
@@ -136,55 +175,82 @@ const ContentManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredBlogs.map((blog, index) => (
-              <motion.tr
-                key={blog._id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.03 }}
-                style={{ backgroundColor: colors.background }}
-              >
-                <td>{index + 1}</td>
-                <td><img src={blog.thumbnail} alt="Thumbnail" className="w-20 h-14 rounded-lg object-cover border" /></td>
-                <td className="font-medium">{blog.title}</td>
-                <td>
-                  <span
-                    className={`badge px-3 py-1 rounded-full text-white`}
-                    style={{ backgroundColor: blog.status === "published" ? "green" : "orange" }}
-                  >
-                    {blog.status}
-                  </span>
-                </td>
-                <td>{blog.createdBy}</td>
-                {isAdmin && (
-                  <td>
-                    <div className="flex items-center justify-center gap-2">
-                      <button
-                        onClick={() => handleToggleStatus(blog._id, blog.status)}
-                        className="btn btn-sm btn-outline"
-                        style={{ borderColor: colors.accent, color: colors.text }}
-                        title={blog.status === "draft" ? "Publish" : "Unpublish"}
+  {filteredBlogs.map((blog, index) => (
+    <motion.tr
+      key={blog._id}
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.03 }}
+      style={{
+        backgroundColor:
+          index % 2 === 0
+            ? `rgb(${colors.background})` // odd rows
+            : `rgb(${colors.secondary})`, // even rows
+        color: `rgb(${colors.text})`,
+      }}
+    >
+      <td>{index + 1}</td>
+      <td>
+        <img
+          src={blog.thumbnail}
+          alt="Thumbnail"
+          className="w-20 h-14 rounded-lg object-cover border"
+        />
+      </td>
+      <td className="font-medium">{blog.title}</td>
+      <td>
+        <span
+          className="badge px-3 py-1 rounded-full"
+          style={{
+            color: `rgb(${colors.text})`,
+            backgroundColor:
+              blog.status === "published"
+                ? "rgb(34,197,94)"
+                : "rgb(234,179,8)",
+          }}
+        >
+          {blog.status}
+        </span>
+      </td>
+      <td>{blog.createdBy}</td>
+      {isAdmin && (
+        <td>
+          <div className="flex items-center justify-center gap-2">
+            {/* buttons here */}
+             <button
+                        onClick={() =>
+                          handleToggleStatus(blog._id, blog.status)
+                        }
+                        className="btn btn-sm  tooltip"
+                        data-tip={
+                          blog.status === "draft" ? "Publish" : "Unpublish"
+                        }
                       >
-                        {blog.status === "draft" ? <MdOutlinePublish style={{ color: "green" }} /> : <RiUnpinLine style={{ color: "orange" }} />}
+                        {blog.status === "draft" ? (
+                          <MdOutlinePublish className="text-green-600 text-lg" />
+                        ) : (
+                          <RiUnpinLine className="text-orange-500 text-lg" />
+                        )}
                       </button>
                       <button
                         onClick={() => handleDelete(blog._id)}
-                        className="btn btn-sm btn-outline"
-                        style={{ borderColor: colors.accent, color: colors.text }}
-                        title="Delete"
+                        className="btn btn-sm  tooltip"
+                        data-tip="Delete"
                       >
-                        <FaTrashAlt style={{ color: "red" }} />
+                        <FaTrashAlt className="text-red-600 text-lg" />
                       </button>
-                    </div>
-                  </td>
-                )}
-              </motion.tr>
-            ))}
-          </tbody>
+          </div>
+        </td>
+      )}
+    </motion.tr>
+  ))}
+</tbody>
+
+   
         </table>
 
         {filteredBlogs.length === 0 && (
-          <div className="text-center py-10" style={{ color: colors.text }}>
+          <div className="text-center py-10 text-lg">
             No blogs found.
           </div>
         )}
@@ -194,6 +260,7 @@ const ContentManagement = () => {
 };
 
 export default ContentManagement;
+
 
 // import { useQuery } from "@tanstack/react-query";
 // import Swal from "sweetalert2";

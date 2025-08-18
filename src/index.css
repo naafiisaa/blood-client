@@ -28,3 +28,8 @@
  
       /* #0a0505 */
 }
+/* Apply to body */
+body {
+  background-color: rgb(var(--neutral));
+  color: rgb(var(--text));
+}

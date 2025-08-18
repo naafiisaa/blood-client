@@ -1,4 +1,277 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
+// import { FaUser, FaEnvelope, FaHospital, FaMapMarkerAlt, FaTint, FaCalendarAlt, FaClock, FaCommentDots } from 'react-icons/fa';
+// import { motion } from 'framer-motion';
+// import Swal from 'sweetalert2';
+// import useAxiosPublic from '../../../Hooks/useAxiosPublic';
+// import districts from '../../../assets/districts.json';
+// import upazilas from '../../../assets/upazilas.json';
+// import useAuth from '../../../Hooks/useAuth';
+
+// const DonationRequest = () => {
+//   const [recipientName, setRecipientName] = useState('');
+//   const [recipientDistrict, setRecipientDistrict] = useState('');
+//   const [recipientUpazila, setRecipientUpazila] = useState('');
+//   const [hospitalName, setHospitalName] = useState('');
+//   const [fullAddress, setFullAddress] = useState('');
+//   const [bloodGroup, setBloodGroup] = useState('');
+//   const [donationDate, setDonationDate] = useState('');
+//   const [donationTime, setDonationTime] = useState('');
+//   const [requestMessage, setRequestMessage] = useState('');
+//   const { user } = useAuth();
+//   const axiosPublic = useAxiosPublic();
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     const selectedDistrict = districts.find(district => district.id === recipientDistrict);
+//     const selectedUpazila = upazilas.find(upazila => upazila.id === recipientUpazila);
+
+//     if (!user) {
+//       Swal.fire('Error', 'You must be logged in to submit a request', 'error');
+//       return;
+//     }
+
+//     const newRequest = {
+//       requesterName: user.displayName,
+//       requesterEmail: user.email,
+//       recipientName,
+//       recipientDistrict: selectedDistrict ? selectedDistrict.name : '',
+//       recipientUpazila: selectedUpazila ? selectedUpazila.name : '',
+//       hospitalName,
+//       fullAddress,
+//       bloodGroup,
+//       donationDate,
+//       donationTime,
+//       requestMessage,
+//       status: 'pending',
+//     };
+
+//     try {
+//       const response = await axiosPublic.post('/donation-requests', newRequest);
+//       if (response.status === 200 || response.status === 201) {
+//         Swal.fire({
+//           icon: 'success',
+//           title: 'Success',
+//           text: 'Donation request created successfully!',
+//           timer: 2000,
+//           timerProgressBar: true,
+//           showConfirmButton: false,
+//         });
+//         // Reset form
+//         setRecipientName('');
+//         setRecipientDistrict('');
+//         setRecipientUpazila('');
+//         setHospitalName('');
+//         setFullAddress('');
+//         setBloodGroup('');
+//         setDonationDate('');
+//         setDonationTime('');
+//         setRequestMessage('');
+//       }
+//     } catch (error) {
+//       console.error('Error creating donation request:', error);
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error',
+//         text: 'Failed to create donation request.',
+//       });
+//     }
+//   };
+
+//   return (
+//     <motion.div
+//       initial={{ opacity: 0, y: 20 }}
+//       animate={{ opacity: 1, y: 0 }}
+//       transition={{ duration: 0.5 }}
+//       className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg mt-8"
+//     >
+//       <h3 className="text-3xl font-bold mb-8 text-center text-red-600 drop-shadow-md">
+//         <FaTint className="inline mr-2" /> Blood Donation Request
+//       </h3>
+
+//       <form onSubmit={handleSubmit} className="space-y-6">
+//         {/* Requester Info - Readonly */}
+//         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//           <label className="flex items-center gap-2 font-semibold text-red-700">
+//             <FaUser /> Requester Name:
+//             <input type="text" value={user?.displayName || ''} readOnly className="input input-bordered w-full bg-red-50" />
+//           </label>
+//           <label className="flex items-center gap-2 font-semibold text-red-700">
+//             <FaEnvelope /> Requester Email:
+//             <input type="email" value={user?.email || ''} readOnly className="input input-bordered w-full bg-red-50" />
+//           </label>
+//         </div>
+
+//         {/* Recipient Info */}
+//         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//           <label className="flex flex-col font-semibold text-red-700">
+//             <span className="flex items-center gap-2 mb-1">
+//               <FaUser /> Recipient Name:
+//             </span>
+//             <input
+//               type="text"
+//               value={recipientName}
+//               onChange={(e) => setRecipientName(e.target.value)}
+//               required
+//               placeholder="Enter recipient name"
+//               className="input input-bordered w-full"
+//             />
+//           </label>
+
+//           <label className="flex flex-col font-semibold text-red-700">
+//             <span className="flex items-center gap-2 mb-1">
+//               <FaMapMarkerAlt /> Recipient District:
+//             </span>
+//             <select
+//               value={recipientDistrict}
+//               onChange={(e) => setRecipientDistrict(e.target.value)}
+//               required
+//               className="select select-bordered w-full"
+//             >
+//               <option value="">Select District</option>
+//               {districts.map((district) => (
+//                 <option key={district.id} value={district.id}>
+//                   {district.name}
+//                 </option>
+//               ))}
+//             </select>
+//           </label>
+//         </div>
+
+//         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//           <label className="flex flex-col font-semibold text-red-700">
+//             <span className="flex items-center gap-2 mb-1">
+//               <FaMapMarkerAlt /> Recipient Upazila:
+//             </span>
+//             <select
+//               value={recipientUpazila}
+//               onChange={(e) => setRecipientUpazila(e.target.value)}
+//               required
+//               className="select select-bordered w-full"
+//               disabled={!recipientDistrict}
+//             >
+//               <option value="">Select Upazila</option>
+//               {upazilas
+//                 .filter((upazila) => upazila.district_id === recipientDistrict)
+//                 .map((upazila) => (
+//                   <option key={upazila.id} value={upazila.id}>
+//                     {upazila.name}
+//                   </option>
+//                 ))}
+//             </select>
+//           </label>
+
+//           <label className="flex flex-col font-semibold text-red-700">
+//             <span className="flex items-center gap-2 mb-1">
+//               <FaHospital /> Hospital Name:
+//             </span>
+//             <input
+//               type="text"
+//               value={hospitalName}
+//               onChange={(e) => setHospitalName(e.target.value)}
+//               required
+//               placeholder="Enter hospital name"
+//               className="input input-bordered w-full"
+//             />
+//           </label>
+//         </div>
+
+//         {/* Address and Blood Group */}
+//         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//           <label className="flex flex-col font-semibold text-red-700">
+//             <span className="flex items-center gap-2 mb-1">
+//               <FaMapMarkerAlt /> Full Address:
+//             </span>
+//             <input
+//               type="text"
+//               value={fullAddress}
+//               onChange={(e) => setFullAddress(e.target.value)}
+//               required
+//               placeholder="Enter full address"
+//               className="input input-bordered w-full"
+//             />
+//           </label>
+
+//           <label className="flex flex-col font-semibold text-red-700">
+//             <span className="flex items-center gap-2 mb-1">
+//               <FaTint /> Blood Group:
+//             </span>
+//             <select
+//               value={bloodGroup}
+//               onChange={(e) => setBloodGroup(e.target.value)}
+//               required
+//               className="select select-bordered w-full"
+//             >
+//               <option value="">Select Blood Group</option>
+//               {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((bg) => (
+//                 <option key={bg} value={bg}>
+//                   {bg}
+//                 </option>
+//               ))}
+//             </select>
+//           </label>
+//         </div>
+
+//         {/* Date and Time */}
+//         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//           <label className="flex flex-col font-semibold text-red-700">
+//             <span className="flex items-center gap-2 mb-1">
+//               <FaCalendarAlt /> Donation Date:
+//             </span>
+//             <input
+//               type="date"
+//               value={donationDate}
+//               onChange={(e) => setDonationDate(e.target.value)}
+//               required
+//               className="input input-bordered w-full"
+//             />
+//           </label>
+
+//           <label className="flex flex-col font-semibold text-red-700">
+//             <span className="flex items-center gap-2 mb-1">
+//               <FaClock /> Donation Time:
+//             </span>
+//             <input
+//               type="time"
+//               value={donationTime}
+//               onChange={(e) => setDonationTime(e.target.value)}
+//               required
+//               className="input input-bordered w-full"
+//             />
+//           </label>
+//         </div>
+
+//         {/* Message */}
+//         <label className="flex flex-col font-semibold text-red-700">
+//           <span className="flex items-center gap-2 mb-1">
+//             <FaCommentDots /> Request Message:
+//           </span>
+//           <textarea
+//             value={requestMessage}
+//             onChange={(e) => setRequestMessage(e.target.value)}
+//             required
+//             placeholder="Write your message here..."
+//             className="textarea textarea-bordered resize-none"
+//             rows={4}
+//           />
+//         </label>
+
+//         {/* Submit Button */}
+//         <motion.button
+//           whileHover={{ scale: 1.05 }}
+//           whileTap={{ scale: 0.95 }}
+//           type="submit"
+//           className="btn bg-red-600 hover:bg-red-700 border-none w-full md:w-auto mx-auto block text-white font-bold text-lg shadow-lg"
+//         >
+//           Submit Request
+//         </motion.button>
+//       </form>
+//     </motion.div>
+//   );
+// };
+
+// export default DonationRequest;
+
+import React, { useState, useEffect } from 'react';
 import { FaUser, FaEnvelope, FaHospital, FaMapMarkerAlt, FaTint, FaCalendarAlt, FaClock, FaCommentDots } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import Swal from 'sweetalert2';
@@ -7,7 +280,33 @@ import districts from '../../../assets/districts.json';
 import upazilas from '../../../assets/upazilas.json';
 import useAuth from '../../../Hooks/useAuth';
 
+const getCSSVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
 const DonationRequest = () => {
+  const [colors, setColors] = useState({
+    primary: getCSSVar('--primary'),
+    secondary: getCSSVar('--secondary'),
+    text: getCSSVar('--text'),
+    background: getCSSVar('--background'),
+    accent: getCSSVar('--accent'),
+    neutral: getCSSVar('--neutral'),
+  });
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setColors({
+        primary: getCSSVar('--primary'),
+        secondary: getCSSVar('--secondary'),
+        text: getCSSVar('--text'),
+        background: getCSSVar('--background'),
+        accent: getCSSVar('--accent'),
+        neutral: getCSSVar('--neutral'),
+      });
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
   const [recipientName, setRecipientName] = useState('');
   const [recipientDistrict, setRecipientDistrict] = useState('');
   const [recipientUpazila, setRecipientUpazila] = useState('');
@@ -22,8 +321,8 @@ const DonationRequest = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const selectedDistrict = districts.find(district => district.id === recipientDistrict);
-    const selectedUpazila = upazilas.find(upazila => upazila.id === recipientUpazila);
+    const selectedDistrict = districts.find(d => d.id === recipientDistrict);
+    const selectedUpazila = upazilas.find(u => u.id === recipientUpazila);
 
     if (!user) {
       Swal.fire('Error', 'You must be logged in to submit a request', 'error');
@@ -82,29 +381,34 @@ const DonationRequest = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg mt-8"
+      // className=" mx-auto p-6 rounded-xl shadow-lg "
+      // style={{ backgroundColor: `rgb(${colors.accent})`, color: `rgb(${colors.text})` }}
     >
-      <h3 className="text-3xl font-bold mb-8 text-center text-red-600 drop-shadow-md">
-        <FaTint className="inline mr-2" /> Blood Donation Request
+      <h3
+        className="text-3xl mx-auto font-bold mb-8 text-center drop-shadow-md flex items-center justify-center gap-2"
+        style={{ color: `rgb(${colors.primary})` }}
+      >
+        <FaTint /> Blood Donation Request
       </h3>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit}  className="space-y-6 mx-auto p-6 rounded-xl shadow-lg "
+      style={{ backgroundColor: `rgb(${colors.accent})`, color: `rgb(${colors.text})` }}>
         {/* Requester Info - Readonly */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <label className="flex items-center gap-2 font-semibold text-red-700">
+          <label className="flex items-center gap-2 font-semibold" style={{ color: `rgb(${colors.primary})` }}>
             <FaUser /> Requester Name:
-            <input type="text" value={user?.displayName || ''} readOnly className="input input-bordered w-full bg-red-50" />
+            <input type="text" value={user?.displayName || ''} readOnly className="input input-bordered w-full" style={{ backgroundColor: `rgb(${colors.neutral})` }} />
           </label>
-          <label className="flex items-center gap-2 font-semibold text-red-700">
+          <label className="flex items-center gap-2 font-semibold" style={{ color: `rgb(${colors.primary})` }}>
             <FaEnvelope /> Requester Email:
-            <input type="email" value={user?.email || ''} readOnly className="input input-bordered w-full bg-red-50" />
+            <input type="email" value={user?.email || ''} readOnly className="input input-bordered w-full" style={{ backgroundColor: `rgb(${colors.neutral})` }} />
           </label>
         </div>
 
         {/* Recipient Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <label className="flex flex-col font-semibold text-red-700">
-            <span className="flex items-center gap-2 mb-1">
+          <label className="flex flex-col font-semibold">
+            <span className="flex items-center gap-2 mb-1" style={{ color: `rgb(${colors.primary})` }}>
               <FaUser /> Recipient Name:
             </span>
             <input
@@ -114,11 +418,12 @@ const DonationRequest = () => {
               required
               placeholder="Enter recipient name"
               className="input input-bordered w-full"
+              style={{ backgroundColor: `rgb(${colors.neutral})`, color: `rgb(${colors.text})` }}
             />
           </label>
 
-          <label className="flex flex-col font-semibold text-red-700">
-            <span className="flex items-center gap-2 mb-1">
+          <label className="flex flex-col font-semibold">
+            <span className="flex items-center gap-2 mb-1" style={{ color: `rgb(${colors.primary})` }}>
               <FaMapMarkerAlt /> Recipient District:
             </span>
             <select
@@ -126,6 +431,7 @@ const DonationRequest = () => {
               onChange={(e) => setRecipientDistrict(e.target.value)}
               required
               className="select select-bordered w-full"
+              style={{ backgroundColor: `rgb(${colors.neutral})`, color: `rgb(${colors.text})` }}
             >
               <option value="">Select District</option>
               {districts.map((district) => (
@@ -138,8 +444,8 @@ const DonationRequest = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <label className="flex flex-col font-semibold text-red-700">
-            <span className="flex items-center gap-2 mb-1">
+          <label className="flex flex-col font-semibold">
+            <span className="flex items-center gap-2 mb-1" style={{ color: `rgb(${colors.primary})` }}>
               <FaMapMarkerAlt /> Recipient Upazila:
             </span>
             <select
@@ -148,20 +454,21 @@ const DonationRequest = () => {
               required
               className="select select-bordered w-full"
               disabled={!recipientDistrict}
+              style={{ backgroundColor: `rgb(${colors.neutral})`, color: `rgb(${colors.text})` }}
             >
               <option value="">Select Upazila</option>
               {upazilas
-                .filter((upazila) => upazila.district_id === recipientDistrict)
-                .map((upazila) => (
-                  <option key={upazila.id} value={upazila.id}>
-                    {upazila.name}
+                .filter((u) => u.district_id === recipientDistrict)
+                .map((u) => (
+                  <option key={u.id} value={u.id}>
+                    {u.name}
                   </option>
                 ))}
             </select>
           </label>
 
-          <label className="flex flex-col font-semibold text-red-700">
-            <span className="flex items-center gap-2 mb-1">
+          <label className="flex flex-col font-semibold">
+            <span className="flex items-center gap-2 mb-1" style={{ color: `rgb(${colors.primary})` }}>
               <FaHospital /> Hospital Name:
             </span>
             <input
@@ -171,14 +478,15 @@ const DonationRequest = () => {
               required
               placeholder="Enter hospital name"
               className="input input-bordered w-full"
+              style={{ backgroundColor: `rgb(${colors.neutral})`, color: `rgb(${colors.text})` }}
             />
           </label>
         </div>
 
-        {/* Address and Blood Group */}
+        {/* Address, Blood Group, Date & Time */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <label className="flex flex-col font-semibold text-red-700">
-            <span className="flex items-center gap-2 mb-1">
+          <label className="flex flex-col font-semibold">
+            <span className="flex items-center gap-2 mb-1" style={{ color: `rgb(${colors.primary})` }}>
               <FaMapMarkerAlt /> Full Address:
             </span>
             <input
@@ -188,11 +496,12 @@ const DonationRequest = () => {
               required
               placeholder="Enter full address"
               className="input input-bordered w-full"
+              style={{ backgroundColor: `rgb(${colors.neutral})`, color: `rgb(${colors.text})` }}
             />
           </label>
 
-          <label className="flex flex-col font-semibold text-red-700">
-            <span className="flex items-center gap-2 mb-1">
+          <label className="flex flex-col font-semibold">
+            <span className="flex items-center gap-2 mb-1" style={{ color: `rgb(${colors.primary})` }}>
               <FaTint /> Blood Group:
             </span>
             <select
@@ -200,6 +509,7 @@ const DonationRequest = () => {
               onChange={(e) => setBloodGroup(e.target.value)}
               required
               className="select select-bordered w-full"
+              style={{ backgroundColor: `rgb(${colors.neutral})`, color: `rgb(${colors.text})` }}
             >
               <option value="">Select Blood Group</option>
               {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((bg) => (
@@ -211,10 +521,9 @@ const DonationRequest = () => {
           </label>
         </div>
 
-        {/* Date and Time */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <label className="flex flex-col font-semibold text-red-700">
-            <span className="flex items-center gap-2 mb-1">
+          <label className="flex flex-col font-semibold">
+            <span className="flex items-center gap-2 mb-1" style={{ color: `rgb(${colors.primary})` }}>
               <FaCalendarAlt /> Donation Date:
             </span>
             <input
@@ -223,11 +532,12 @@ const DonationRequest = () => {
               onChange={(e) => setDonationDate(e.target.value)}
               required
               className="input input-bordered w-full"
+              style={{ backgroundColor: `rgb(${colors.neutral})`, color: `rgb(${colors.text})` }}
             />
           </label>
 
-          <label className="flex flex-col font-semibold text-red-700">
-            <span className="flex items-center gap-2 mb-1">
+          <label className="flex flex-col font-semibold">
+            <span className="flex items-center gap-2 mb-1" style={{ color: `rgb(${colors.primary})` }}>
               <FaClock /> Donation Time:
             </span>
             <input
@@ -236,13 +546,14 @@ const DonationRequest = () => {
               onChange={(e) => setDonationTime(e.target.value)}
               required
               className="input input-bordered w-full"
+              style={{ backgroundColor: `rgb(${colors.neutral})`, color: `rgb(${colors.text})` }}
             />
           </label>
         </div>
 
-        {/* Message */}
-        <label className="flex flex-col font-semibold text-red-700">
-          <span className="flex items-center gap-2 mb-1">
+        {/* Request Message */}
+        <label className="flex flex-col font-semibold">
+          <span className="flex items-center gap-2 mb-1" style={{ color: `rgb(${colors.primary})` }}>
             <FaCommentDots /> Request Message:
           </span>
           <textarea
@@ -250,7 +561,8 @@ const DonationRequest = () => {
             onChange={(e) => setRequestMessage(e.target.value)}
             required
             placeholder="Write your message here..."
-            className="textarea textarea-bordered resize-none"
+            className="textarea textarea-bordered resize-none w-full"
+            style={{ backgroundColor: `rgb(${colors.neutral})`, color: `rgb(${colors.text})` }}
             rows={4}
           />
         </label>
@@ -260,7 +572,8 @@ const DonationRequest = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           type="submit"
-          className="btn bg-red-600 hover:bg-red-700 border-none w-full md:w-auto mx-auto block text-white font-bold text-lg shadow-lg"
+          className="btn w-full md:w-auto mx-auto block font-bold text-lg shadow-lg"
+          style={{ backgroundColor: `rgb(${colors.primary})`, color: 'white', border: 'none' }}
         >
           Submit Request
         </motion.button>
@@ -270,4 +583,3 @@ const DonationRequest = () => {
 };
 
 export default DonationRequest;
-
